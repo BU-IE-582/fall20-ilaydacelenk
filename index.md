@@ -7,4 +7,4 @@ This is my [Progress Journal website](https://bu-ie-582.github.io/fall20-ilaydac
 There will be several homeworks done for this course.
 
 ### Homeworks 0
-- [RMarkdown Homework](https://pjournal.github.io/boun01-ilaydacelenk/RMarkdown_Homework.html): Information about me and discussions on some posts.
+- 
