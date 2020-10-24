@@ -2,9 +2,9 @@
 
 This is my [Progress Journal website](https://bu-ie-582.github.io/fall20-ilaydacelenk/) created for IE 582 course at Boğaziçi University. You can also visit my personal Github [Website](https://ilaydacelenk.github.io/). 
 
-## Homeworks
+## Homework Assignments
 
-There will be several homeworks done for this course.
+There will be several homework assignments done for this course.
 
-### Homeworks 0
-- 
+### Homework Assignment 0
+- [R Examples](files/HW_0.html): Summary of 5 interesting R examples using RMarkdown.
