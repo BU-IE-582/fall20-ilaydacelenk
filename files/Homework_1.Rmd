@@ -1,0 +1,63 @@
+---
+title: "HOMEWORK 1"
+author: "ilaydacelenk"
+date: "11/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, warning=FALSE}
+#importing the libraries
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
+
+### English Premier League Data for the Seasons 2020/2021, 2019/2020 and 2018/2019
+
+The description for the columns of the data set can be found [here](https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW1_field_definitions.xlsx?raw=true).
+
+```{r data}
+#reading the data from repository
+data_ex=read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/hw1_data.csv")
+data20=read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/20_21.csv")
+data19=read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/19_20.csv")
+data18=read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/18_19.csv")
+
+all_data<-bind_rows(mutate(data20,year=2021), mutate(data19,year=1920), mutate(data18,year=1819))
+
+```
+
+### Task 1:
+
+
+
+#### Number of Games vs Home Score
+
+```{r task1a}
+ggplot(all_data) + geom_histogram(aes(x = FTHG), binwidth=0.5)
+# FTHG = Number of Goals scored by Home Team (Full time)
+```
+
+```{r task1b}
+ggplot(all_data) + geom_histogram(aes(x = FTAG), binwidth=0.5)
+# FTHG = Number of Goals scored by Home Team (Full time)
+```
+
+```{r task1c}
+ggplot(all_data) + geom_histogram(aes(x = FTHG-FTAG), binwidth=0.5)
+# FTHG = Number of Goals scored by Home Team (Full time)
+```
+
+
+### Task 2:
+
+### Task 3:
+
+### References
+
+
+

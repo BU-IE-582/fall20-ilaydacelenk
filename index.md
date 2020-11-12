@@ -1,6 +1,6 @@
 # Welcome to Ilayda Celenk's GitHub Pages
 
-This is my [Progress Journal website](https://bu-ie-582.github.io/fall20-ilaydacelenk/) created for IE 582 course at Boğaziçi University. You can also visit my personal Github [Website](https://ilaydacelenk.github.io/). 
+This is my [Progress Journal website](https://bu-ie-582.github.io/fall20-ilaydacelenk/) created for IE 582 course at Bogazici University. You can also visit my personal Github [Website](https://ilaydacelenk.github.io/). 
 
 ## Homework Assignments
 
