@@ -1,15 +1,16 @@
 # Welcome to Ilayda Celenk's GitHub Pages
 
-This is my [Progress Journal website](https://bu-ie-582.github.io/fall20-ilaydacelenk/) created for IE 582 course at Bogazici University. You can also visit my personal Github [Website](https://ilaydacelenk.github.io/). 
+This is my [Progress Journal website](https://pjournal.github.io/boun01-ilaydacelenk/) created for IE 48A course at Boğaziçi University. I am also a member of group Dol_R, which has another [website](https://pjournal.github.io/boun01g-dol-r/). You can also visit my personal Github [Website](https://ilaydacelenk.github.io/). 
 
-## Homework Assignments
+## Assignments
 
-There will be several homework assignments done for this course.
+There will be several assignments done for this course.
 
-### Homework Assignment 0
-[R Examples](files/HW_0.html): Summary of 5 interesting R examples using RMarkdown.
+### Assignment 1
+- [RMarkdown Homework](https://pjournal.github.io/boun01-ilaydacelenk/RMarkdown_Homework.html): Information about me and discussions on some posts.
 
-[English Premier League Data Analysis](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_1.html): Distributional analysis of English Premier League data
+### Assignment 2
+- [Electricity Market Prices](https://pjournal.github.io/boun01-ilaydacelenk/Electricity_Market_Prices.html): Report about July 2020’s electricity prices using ggplot2 and dplyr packages.
 
-
-
+### Assignment 3
+- [Diamonds Price Estimation](https://pjournal.github.io/boun01-ilaydacelenk/Assignment3/Diamond_Price.html): Machine Learning project using tidyverse Diamonds data and a regression model.
