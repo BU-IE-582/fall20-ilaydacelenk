@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries, warning=FALSE}
+```{r libraries, conflict=FALSE, warning=FALSE, message=FALSE}
 #importing the libraries
 library(ggplot2)
 library(tidyverse)
@@ -38,17 +38,17 @@ all_data<-bind_rows(mutate(data20,year=2021), mutate(data19,year=1920), mutate(d
 #### Number of Games vs Home Score
 
 ```{r task1a}
-ggplot(all_data) + geom_histogram(aes(x = FTHG), binwidth=0.5)
+ggplot(all_data) + geom_histogram(aes(x = FTHG), binwidth=0.5) + xlab("Home Goals") + ylab("Number of Games") + theme(plot.caption=element_text(hjust = 0.5))
 # FTHG = Number of Goals scored by Home Team (Full time)
 ```
 
 ```{r task1b}
-ggplot(all_data) + geom_histogram(aes(x = FTAG), binwidth=0.5)
+ggplot(all_data) + geom_histogram(aes(x = FTAG), binwidth=0.5) + xlab("Away Goals") + ylab("Number of Games") + theme(plot.caption=element_text(hjust = 0.5))
 # FTHG = Number of Goals scored by Home Team (Full time)
 ```
 
 ```{r task1c}
-ggplot(all_data) + geom_histogram(aes(x = FTHG-FTAG), binwidth=0.5)
+ggplot(all_data) + geom_histogram(aes(x = FTHG-FTAG), binwidth=0.5) + xlab("Home Goals – Away Goals") + ylab("Number of Games") + theme(plot.caption=element_text(hjust = 0.5))
 # FTHG = Number of Goals scored by Home Team (Full time)
 ```
 
