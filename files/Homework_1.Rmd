@@ -311,10 +311,15 @@ WH_probs$numericbins[WH_probs$numericbins==10] <- 0.9
 ggplot(WH_probs) + geom_point(aes(x=WH_HA, y=WHD, colour="WH"), color="blue") + geom_point(aes(x=numericbins, y=actual_draw), color="red") +  xlab("P(Home Win) – P(Away Win)") + ylab("P(Tie)") + ggtitle("William Hill") + theme(plot.title=element_text(hjust = 0.5))
 ```
 
+
+
 ### References
 
 [1] Jonas Mirza and Niklas Fejes,2016, “Statistical Football Modeling A Study of Football Betting and Implementation of Statistical Algorithms in Premier League”, available online: http://www.it.uu.se/edu/course/homepage/projektTDB/ht15/project16/Project16_Report.pdf
+
 [2] Štrumbelj, E., 2014. On determining probability forecasts from betting odds. International journal of forecasting, 30(4), pp.934-943.
+
 [3] Shin, H.S., 1993. Measuring the incidence of insider trading in a market for state-contingent claims. The Economic Journal, 103(420), pp.1141-1153.
+
 [4] Data: https://www.football-data.co.uk/englandm.php
 
