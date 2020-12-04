@@ -11,3 +11,6 @@ There will be several homework assignments done for this course.
 
 ### Homework Assignment 1
 [English Premier League Data Analysis](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_1.html): Distributional analysis of English Premier League data
+
+### Homework Assignment 2
+[Dimensionality Reduction for Time Series Data](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_2.html):  PCA on uWaveGestureLibrary data.
