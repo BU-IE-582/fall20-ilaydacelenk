@@ -15,7 +15,7 @@ library(scatterplot3d) # part(a)
 library(tidyverse) #filter etc.
 library(ggplot2) #plot in reduced dimensions
 library(reshape) #melt
-
+library(directlabels)
 library(dplyr)
 library(DT) #datatable
 ```
@@ -29,11 +29,8 @@ Given uWaveGestureLibrary, consisting over 4000 instances from 8 people with 8 d
 #### A. Read the Data and Plot an Instance from Each Gesture
 ```{r read-data}
 #reading the data from repository
-#x_test=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_X_TEST.txt?raw=true")
 x_train=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_X_TRAIN.txt?raw=true")
-#y_test=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_Y_TEST.txt?raw=true")
 y_train=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_Y_TRAIN.txt?raw=true")
-#z_test=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_Z_TEST.txt?raw=true")
 z_train=read.table("https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/HW2_data/uWaveGestureLibrary_Z_TRAIN.txt?raw=true")
 ```
 
@@ -64,7 +61,6 @@ x_position <- loc_matrix(x_train) %>% as.matrix()
 y_position <- loc_matrix(y_train) %>% as.matrix()
 z_position <- loc_matrix(z_train) %>% as.matrix()
 
-#par(mfrow=c(1,1))
 
 plot_3d <- function(indices){
   for(i in 1:8) {
@@ -111,101 +107,92 @@ print(summary(pca, loadings=T))
 
 ```{r plot-2-from-each}
 
-xyz_long_uni <- xyz_long %>% mutate(value = 0.209*X + 0.723*Y + 0.658*Z) %>% select(-X, -Y, -Z)
+xyz_long_uni <- xyz_long %>% mutate(value = predict(pca,xyz_long[,3:5])[,1]) %>% select(-X, -Y, -Z)
 
-#selecting 2 random series from each class
-ex_class1 <- xyz_long_uni %>% filter(time_series_id==11 | time_series_id==17) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class2 <- xyz_long_uni %>% filter(time_series_id==15 | time_series_id==20) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class3 <- xyz_long_uni %>% filter(time_series_id==4 | time_series_id==13) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class4 <- xyz_long_uni %>% filter(time_series_id==5 | time_series_id==8) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class5 <- xyz_long_uni %>% filter(time_series_id==2 | time_series_id==3) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class6 <- xyz_long_uni %>% filter(time_series_id==1 | time_series_id==10) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class7 <- xyz_long_uni %>% filter(time_series_id==7 | time_series_id==12) %>% mutate(time_series_id = as_factor(time_series_id))
-ex_class8 <- xyz_long_uni %>% filter(time_series_id==6 | time_series_id==21) %>% mutate(time_series_id = as_factor(time_series_id))
 
-ggplot(ex_class1) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 1")
-ggplot(ex_class2) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 2")
-ggplot(ex_class3) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 3")
-ggplot(ex_class4) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 4")
-ggplot(ex_class5) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 5")
-ggplot(ex_class6) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 6")
-ggplot(ex_class7) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 7")
-ggplot(ex_class8) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 8")
+
+ex_class <- xyz_long_uni %>% filter(time_series_id %in% c(11, 17, 15, 20, 4, 13, 5, 8, 2, 3, 1, 10, 7, 12, 6, 21)) %>% mutate(time_series_id = as_factor(time_series_id), class = as_factor(class))
+
+ggplot(ex_class, aes(x=time_index, y=value, colour=time_series_id)) + geom_line() + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + scale_color_discrete(name = "Classes", labels = c("Class6", "Class5", "Class5", "Class3", "Class4", "Class8", "Class7", "Class4", "Class6", "Class1", "Class7", "Class3", "Class2", "Class1", "Class2", "Class8")) + geom_dl(aes(label = class), method = list(dl.combine("last.points")), cex = 0.8) 
+
+ggplot(ex_class, aes(x=time_index, y=value, colour=class)) + geom_line() + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + scale_color_discrete(name = "Classes")
 
 ```
 
-#### C. PCA on Different
+#### C. Dimensionality Reduction - PCA on the Data from Each Gesture
+
+
+Using the long format for the position data, we apply PCA on X, Y and Z values for each gesture. This can be achieved by filtering the data in long format. 
+
+According to the PCA results, with respect to the order of the gestures, the proportions of variance covered by the first components are approximately 0.56, 0.42, 0.50, 0.55, 0.66, 0.60, 0.56 and 0.50. 
+
+Since this analysis made on each gesture separately, the linear combinations of X, Y and Z coordinates have different coefficients. For example, for gesture 8, we have 0.664*X+0.337*Y+0.668*Z. With the PCA applied on the whole data, we had 0.209*X + 0.723*Y + 0.658*Z. The coefficients of X coordinates have a huge difference. 
 
 
 ```{r pca}
 xyz_long_1 <- xyz_long %>% filter(class==1)
 pca1 <- princomp(xyz_long_1[,3:5], cor=T) #scale differences T
 print(summary(pca1, loadings=T))
-xyz_long_uni_1 <- xyz_long_1 %>% mutate(value = 0.119*X + 0.693*Y + 0.711*Z) %>% select(-X, -Y, -Z)
-ex_class1_1 <- xyz_long_uni_1 %>% filter(time_series_id==11 | time_series_id==17) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class1_1) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 1")
+xyz_long_uni_1 <- xyz_long_1 %>% mutate(value = predict(pca1,xyz_long_1[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==11 | time_series_id==17) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_1) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 1")
 
 xyz_long_2 <- xyz_long %>% filter(class==2)
 pca2 <- princomp(xyz_long_2[,3:5], cor=T) #scale differences T
 print(summary(pca2, loadings=T))
-xyz_long_uni_2 <- xyz_long_2 %>% mutate(value = 0.535*X + 0.613*Y + 0.581*Z) %>% select(-X, -Y, -Z)
-ex_class2_2 <- xyz_long_uni_2 %>% filter(time_series_id==15 | time_series_id==20) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class2_2) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 2")
+xyz_long_uni_2 <- xyz_long_2 %>% mutate(value = predict(pca2,xyz_long_2[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==15 | time_series_id==20) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_2) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 2")
 
 xyz_long_3 <- xyz_long %>% filter(class==3)
 pca3 <- princomp(xyz_long_3[,3:5], cor=T) #scale differences T
 print(summary(pca3, loadings=T))
-xyz_long_uni_3 <- xyz_long_3 %>% mutate(value = 0.709*X + 0.371*Y - 0.599*Z) %>% select(-X, -Y, -Z)
-ex_class3_3 <- xyz_long_uni_3 %>% filter(time_series_id==4 | time_series_id==13) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class3_3) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 3")
+xyz_long_uni_3 <- xyz_long_3 %>% mutate(value = predict(pca3,xyz_long_3[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==4 | time_series_id==13) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_3) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 3")
 
 xyz_long_4 <- xyz_long %>% filter(class==4)
 pca4 <- princomp(xyz_long_4[,3:5], cor=T) #scale differences T
 print(summary(pca4, loadings=T))
-xyz_long_uni_4 <- xyz_long_4 %>% mutate(value = 0.702*X + 0.679*Y - 0.230*Z) %>% select(-X, -Y, -Z)
-ex_class4_4 <- xyz_long_uni_4 %>% filter(time_series_id==5 | time_series_id==8) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class4_4) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 4")
+xyz_long_uni_4 <- xyz_long_4 %>% mutate(value = predict(pca4,xyz_long_4[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==5 | time_series_id==8) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_4) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 4")
 
 xyz_long_5 <- xyz_long %>% filter(class==5)
 pca5 <- princomp(xyz_long_5[,3:5], cor=T) #scale differences T
 print(summary(pca5, loadings=T))
-xyz_long_uni_5 <- xyz_long_5 %>% mutate(value = 0.245*X + 0.685*Y + 0.686*Z) %>% select(-X, -Y, -Z)
-ex_class5_5 <- xyz_long_uni_5 %>% filter(time_series_id==2 | time_series_id==3) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class5_5) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 5")
+xyz_long_uni_5 <- xyz_long_5 %>% mutate(value = predict(pca5,xyz_long_5[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==2 | time_series_id==3) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_5) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 5")
 
 xyz_long_6 <- xyz_long %>% filter(class==6)
 pca6 <- princomp(xyz_long_6[,3:5], cor=T) #scale differences T
 print(summary(pca6, loadings=T))
-xyz_long_uni_6 <- xyz_long_6 %>% mutate(value = 0.291*X - 0.671*Y - 0.682*Z) %>% select(-X, -Y, -Z)
-ex_class6_6 <- xyz_long_uni_6 %>% filter(time_series_id==1 | time_series_id==10) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class6_6) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 6")
+xyz_long_uni_6 <- xyz_long_6 %>% mutate(value = predict(pca6,xyz_long_6[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==1 | time_series_id==10) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_6) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 6")
 
 xyz_long_7 <- xyz_long %>% filter(class==7)
 pca7 <- princomp(xyz_long_7[,3:5], cor=T) #scale differences T
 print(summary(pca7, loadings=T))
-xyz_long_uni_7 <- xyz_long_7 %>% mutate(value = 0.596*X + 0.632*Y + 0.496*Z) %>% select(-X, -Y, -Z)
-ex_class7_7 <- xyz_long_uni_7 %>% filter(time_series_id==7 | time_series_id==12) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class7_7) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 7")
+xyz_long_uni_7 <- xyz_long_7 %>% mutate(value = predict(pca7,xyz_long_7[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==7 | time_series_id==12) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_7) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 7")
 
 xyz_long_8 <- xyz_long %>% filter(class==8)
 pca8 <- princomp(xyz_long_8[,3:5], cor=T) #scale differences T
 print(summary(pca8, loadings=T))
-xyz_long_uni_8 <- xyz_long_8 %>% mutate(value = 0.664*X + 0.337*Y + 0.668*Z) %>% select(-X, -Y, -Z)
-ex_class8_8 <- xyz_long_uni_8 %>% filter(time_series_id==6 | time_series_id==21) %>% mutate(time_series_id = as_factor(time_series_id))
-ggplot(ex_class8_8) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("2 Time Series from Class 8")
-
-
-
-
+xyz_long_uni_8 <- xyz_long_8 %>% mutate(value = predict(pca8,xyz_long_8[,3:5])[,1]) %>% select(-X, -Y, -Z) %>% filter(time_series_id==6 | time_series_id==21) %>% mutate(time_series_id = as_factor(time_series_id))
+ggplot(xyz_long_uni_8) + geom_line(aes(x=time_index, y=value, colour=time_series_id)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("Time Series from Class 8")
 
 ```
 
 
 
-#### D. Visualize in the Reduced Dimensions
+#### D. Multidimensional Scaling
 
 ```{r visualize}
-
+data_binded_columns<-cbind(x_train,y_train[,-1],z_train[,-1])
+data_binded_columns[,-1]=scale(data_binded_columns[,-1])
+distance = as.matrix(dist(data_binded_columns[,-1], method = "euclidean"))
+fit <- cmdscale(distance,eig=TRUE, k=2) # returns eigenvalues and chooses dimension as 2
+coord1 <- fit$points[,1]
+coord2 <- fit$points[,2]
+plot(coord1, coord2, xlab="Coordinate 1", ylab="Coordinate 2",
+  main="MDS", type="p")
 ```
 
 
