@@ -183,7 +183,7 @@ ggplot(xyz_long_uni_8) + geom_line(aes(x=time_index, y=value, colour=time_series
 
 #### D. Multidimensional Scaling
 
-After implementing multimensional scaling, the corresponding points to each gesture is plotted on the graph. This does not create a useful way to separate gestures. For example, even though gestures 1 and 5 are distinguishable, gestures 1 and 6 are almost indistinguishable.
+After implementing multidimensional scaling, the corresponding points to each gesture is plotted on the graph. This does not create a useful way to separate gestures. For example, even though gestures 1 and 5 are distinguishable, gestures 1 and 6 are almost indistinguishable.
 
 ```{r visualize-mds}
 data_binded_columns<-cbind(x_train,y_train[,-1],z_train[,-1])
@@ -192,7 +192,7 @@ distance = as.matrix(dist(data_binded_columns[,-1], method = "euclidean"))
 fit <- cmdscale(distance, k=2) #choose dimension as 2
 fit_data <- data_binded_columns %>% select(V1) %>% mutate(coord1=fit[,1], coord2=fit[,2], Classes = as_factor(V1))
 
-ggplot(fit_data) + geom_point(aes(x=coord1, y=coord2, colour=Classes)) + xlab("Time Index") + ylab("Value") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("MDS") 
+ggplot(fit_data) + geom_point(aes(x=coord1, y=coord2, colour=Classes)) + xlab("Coordinate 1") + ylab("Coordinate 2") + theme(plot.title=element_text(hjust = 0.5)) + ggtitle("MDS") 
 
 ```
 
