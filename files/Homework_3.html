@@ -382,12 +382,12 @@ library(tidyverse)
 library(DT) #datatable</code></pre>
 <div id="introduction" class="section level3">
 <h3>Introduction:</h3>
-<p>This assignment will focus on regression approaches to forecast the next day’s hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. Training data is from 1st of January, 2016 till the 1st of November, 2020 and test data is from 1st of November, 2016 till the 1st of December, 2020.</p>
+<p>This assignment will focus on regression approaches to forecast the next day’s hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. We will learn the model using the train data and compare the model results using test data.</p>
 </div>
 <div id="data-collection" class="section level3">
 <h3>Data Collection:</h3>
-<pre class="r"><code>#reading the data from repository
-raw &lt;-  read.csv(&quot;https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/hw3_data.csv&quot;)
+<p>Let’s read the data from the repository and rename the columns. Then we can manipulate the data structures. For example <code>Consumption</code> values include both “,” and “.” separators, therefore it is wise to use . only. Also, for simplicity, <code>Hour</code> values are be mapped into 0, 1, .., 23.</p>
+<pre class="r"><code>raw &lt;-  read.csv(&quot;https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/hw3_data.csv&quot;)
 
 data &lt;- rename(raw,
     Date = Date,
@@ -405,7 +405,7 @@ FALSE $ Consumption &lt;dbl&gt; 26277.24, 24991.82, 23532.61, 22464.78, 22002.91
 <h3>Tasks:</h3>
 <div id="naive-approaches" class="section level4">
 <h4>Naive Approaches</h4>
-<p>There will be two naive approaches. One of them will use 48 hours ago consumption and the other will use 168 hours ago consumption.</p>
+<p>There will be two naive approaches. One of them will use 48 hours ago consumption and the other will use 168 hours ago consumption. For <code>lag 48</code>, predictions are simply the data from 48 hours ago. We first create <code>lag_48</code> and <code>lag_168</code> columns. We divide the data set into train and test. Training data is from 1st of January, 2016 till the 1st of November, 2020 and test data is from 1st of November, 2016 till the 1st of December, 2020. Since the first 48 rows of <code>lag_48</code> column and the first 168 rows of <code>lag_168</code> column do not have any values they are represented as NA and we create different train sets for each where we remove the NA rows from the train data.</p>
 <pre class="r"><code>data &lt;- data %&gt;% mutate(lag_48 = lag(Consumption, 48, na.pad = TRUE), lag_168 = lag(Consumption, 168, na.pad = TRUE))
 
 test &lt;- data %&gt;% tail(30*24)
@@ -414,11 +414,13 @@ train &lt;- data %&gt;% head(-30*24)
 train48 &lt;- train %&gt;% drop_na(lag_48)
 train168 &lt;- train %&gt;% drop_na(lag_168)
 
-lag48_error &lt;- MAPE(train48$lag_48, train48$Consumption)
-lag168_error &lt;- MAPE(train168$lag_168, train168$Consumption)</code></pre>
+lag48_error &lt;- MAPE(test$lag_48, test$Consumption)
+lag168_error &lt;- MAPE(test$lag_168, test$Consumption)</code></pre>
+<p>Using the lag consumption values as our forecast, the mean absolute percentage errors(MAPE) are computed as 7.79% and 3.45% for the lag 48 and lag 168 values respectively.</p>
 </div>
 <div id="lags-are-features" class="section level4">
 <h4>Lags are Features</h4>
+<p>Now, we treat lag consumption values as features to build a regression model. Here we teach the model using the train data for lag_168 since we need to remove the NA rows anyways.</p>
 <pre class="r"><code>linear_model &lt;- lm(Consumption ~ lag_48 + lag_168, train168)
 summary(linear_model)</code></pre>
 <pre><code>FALSE 
@@ -441,13 +443,12 @@ FALSE Residual standard error: 2392 on 42213 degrees of freedom
 FALSE Multiple R-squared:  0.7753,  Adjusted R-squared:  0.7753 
 FALSE F-statistic: 7.281e+04 on 2 and 42213 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>pred_linear &lt;- predict(linear_model, newdata = test)
-linear_error &lt;- MAPE(pred_linear, test$Consumption)
-
-print(linear_error)</code></pre>
-<pre><code>FALSE [1] 0.04122093</code></pre>
+linear_error &lt;- MAPE(pred_linear, test$Consumption)</code></pre>
+<p>Then we make the prediction on the test data and calculated MAPE value is 4.12%, which is not better than the naive method with lag 168 values.</p>
 </div>
 <div id="seasonality" class="section level4">
 <h4>Seasonality</h4>
+<p>Energy consumption may be affected by hourly seasonality. Therefore, in order to account for it better than the previous part, we can model each hour separately and train the models for each hour. Since there are 24 hours, there will be 24 models. Again we will use the train data for lag_168 due to the same reason as above. We filter the train data according to each <code>Hour</code> value, then create a model. Afterwards, we predict values using test data and create a column named <code>pred</code> which is consisted of the predicted values. After doing this for all of the hours, we combine rows in order to get the overall test and prediction values on one table.</p>
 <pre class="r"><code>#do not forget to put train168 instead of train
 seasonality &lt;- function(train_data, test_data, hour){
   train_hourly &lt;- train_data %&gt;% filter(Hour==hour)
@@ -462,10 +463,8 @@ for(i in 1:23)
   seasonal_pred &lt;- rbind(seasonal_pred, seasonality(train168, test, i))
 }
 
-seasonal_error &lt;- MAPE(seasonal_pred$pred, seasonal_pred$Consumption)
-
-print(seasonal_error)</code></pre>
-<pre><code>FALSE [1] 0.04246129</code></pre>
+seasonal_error &lt;- MAPE(seasonal_pred$pred, seasonal_pred$Consumption)</code></pre>
+<p>Then, again, we calculate the MAPE value, which is found as 4.25%.</p>
 </div>
 <div id="hourly-consumption-of-last-weeks-same-day-with-lasso-regression" class="section level4">
 <h4>Hourly Consumption of Last Week’s Same Day with Lasso Regression</h4>

@@ -26,12 +26,13 @@ library(DT) #datatable
 
 ### Introduction:
 
-This assignment will focus on regression approaches to forecast the next day's hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. Training data is from 1st of January, 2016 till the 1st of November, 2020 and test data is from 1st of November, 2016 till the 1st of December, 2020.
+This assignment will focus on regression approaches to forecast the next day's hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. We will learn the model using the train data and compare the model results using test data. 
 
 ### Data Collection:
 
+Let's read the data from the repository and rename the columns. Then we can manipulate the data structures. For example `Consumption` values include both "," and "." separators, therefore it is wise to use . only. Also, for simplicity, `Hour` values are be mapped into 0, 1, .., 23.
+
 ```{r read-data}
-#reading the data from repository
 raw <-  read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/hw3_data.csv")
 
 data <- rename(raw,
@@ -46,10 +47,9 @@ data %>% glimpse()
 
 #### Naive Approaches
 
-There will be two naive approaches. One of them will use 48 hours ago consumption and the other will use 168 hours ago consumption. 
+There will be two naive approaches. One of them will use 48 hours ago consumption and the other will use 168 hours ago consumption. For `lag 48`, predictions are simply the data from 48 hours ago. We first create `lag_48` and `lag_168` columns. We divide the data set into train and test. Training data is from 1st of January, 2016 till the 1st of November, 2020 and test data is from 1st of November, 2016 till the 1st of December, 2020. Since the first 48 rows of `lag_48` column and the first 168 rows of `lag_168` column do not have any values they are represented as NA and we create different train sets for each where we remove the NA rows from the train data. 
 
 ```{r part-a}
-
 data <- data %>% mutate(lag_48 = lag(Consumption, 48, na.pad = TRUE), lag_168 = lag(Consumption, 168, na.pad = TRUE))
 
 test <- data %>% tail(30*24)
@@ -58,27 +58,29 @@ train <- data %>% head(-30*24)
 train48 <- train %>% drop_na(lag_48)
 train168 <- train %>% drop_na(lag_168)
 
-lag48_error <- MAPE(train48$lag_48, train48$Consumption)
-lag168_error <- MAPE(train168$lag_168, train168$Consumption)
+lag48_error <- MAPE(test$lag_48, test$Consumption)
+lag168_error <- MAPE(test$lag_168, test$Consumption)
 ```
+
+Using the lag consumption values as our forecast, the mean absolute percentage errors(MAPE) are computed as `r 100*round(lag48_error,4)`% and `r 100*round(lag168_error,4)`% for the lag 48 and lag 168 values respectively.   
 
 
 #### Lags are Features
 
-
+Now, we treat lag consumption values as features to build a regression model. Here we teach the model using the train data for lag_168 since we need to remove the NA rows anyways. 
 ```{r part-b}
-
 linear_model <- lm(Consumption ~ lag_48 + lag_168, train168)
 summary(linear_model)
 
 pred_linear <- predict(linear_model, newdata = test)
 linear_error <- MAPE(pred_linear, test$Consumption)
-
-print(linear_error)
 ```
 
+Then we make the prediction on the test data and calculated MAPE value is `r 100*round(linear_error,4)`%, which is not better than the naive method with lag 168 values.
 
 #### Seasonality
+
+Energy consumption may be affected by hourly seasonality. Therefore, in order to account for it better than the previous part, we can model each hour separately and train the models for each hour. Since there are 24 hours, there will be 24 models. Again we will use the train data for lag_168 due to the same reason as above. We filter the train data according to each `Hour` value, then create a model. Afterwards, we predict values using test data and create a column named `pred` which is consisted of the predicted values. After doing this for all of the hours, we combine rows in order to get the overall test and prediction values on one table. 
 
 ```{r part-c}
 #do not forget to put train168 instead of train
@@ -96,9 +98,9 @@ for(i in 1:23)
 }
 
 seasonal_error <- MAPE(seasonal_pred$pred, seasonal_pred$Consumption)
-
-print(seasonal_error)
 ```
+
+Then, we calculate the MAPE value, which is found as `r 100*round(seasonal_error,4)`%. Again, there is no improvement.
 
 
 #### Hourly Consumption of Last Week's Same Day with Lasso Regression
