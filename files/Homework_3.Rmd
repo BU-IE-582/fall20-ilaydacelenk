@@ -1,0 +1,129 @@
+---
+title: "HOMEWORK 3"
+author: "ilaydacelenk"
+date: "16/11/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, conflict=FALSE, warning=FALSE, message=FALSE, error = FALSE, comment = FALSE)
+```
+
+```{r libraries}
+#importing the libraries
+library(MLmetrics)
+library(tidyr)
+#library(plyr)
+library(dplyr)
+library(reshape2)
+library(ggplot2) #plot in reduced dimensions
+
+library(tidyverse)
+#library(reshape) 
+library(DT) #datatable
+```
+
+### Introduction:
+
+This assignment will focus on regression approaches to forecast the next day's hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. Training data is from 1st of January, 2016 till the 1st of November, 2020 and test data is from 1st of November, 2016 till the 1st of December, 2020.
+
+### Data Collection:
+
+```{r read-data}
+#reading the data from repository
+raw <-  read.csv("https://raw.githubusercontent.com/BU-IE-582/fall20-ilaydacelenk/master/files/hw3_data.csv")
+
+data <- rename(raw,
+    Date = Date,
+    Hour = Hour,
+    Consumption = Consumption..MWh.) %>% mutate(Consumption = as.numeric(sub(",", "", Consumption, fixed = TRUE))) %>% mutate(Hour = as.character(as.numeric(factor(Hour))-1))
+
+data %>% glimpse()
+```
+
+### Tasks:
+
+#### Naive Approaches
+
+There will be two naive approaches. One of them will use 48 hours ago consumption and the other will use 168 hours ago consumption. 
+
+```{r part-a}
+
+data <- data %>% mutate(lag_48 = lag(Consumption, 48, na.pad = TRUE), lag_168 = lag(Consumption, 168, na.pad = TRUE))
+
+test <- data %>% tail(30*24)
+train <- data %>% head(-30*24)
+
+train48 <- train %>% drop_na(lag_48)
+train168 <- train %>% drop_na(lag_168)
+
+lag48_error <- MAPE(train48$lag_48, train48$Consumption)
+lag168_error <- MAPE(train168$lag_168, train168$Consumption)
+```
+
+
+#### Lags are Features
+
+
+```{r part-b}
+
+linear_model <- lm(Consumption ~ lag_48 + lag_168, train168)
+summary(linear_model)
+
+pred_linear <- predict(linear_model, newdata = test)
+linear_error <- MAPE(pred_linear, test$Consumption)
+
+print(linear_error)
+```
+
+
+#### Seasonality
+
+```{r part-c}
+#do not forget to put train168 instead of train
+seasonality <- function(train_data, test_data, hour){
+  train_hourly <- train_data %>% filter(Hour==hour)
+  model <- lm(Consumption ~ lag_48 + lag_168, train_hourly)
+  test_hourly <- test_data %>% filter(Hour==hour) %>% mutate(pred=predict(model, newdata = .))
+  return(test_hourly)
+}
+
+seasonal_pred <- seasonality(train168, test, 0)
+for(i in 1:23) 
+{
+  seasonal_pred <- rbind(seasonal_pred, seasonality(train168, test, i))
+}
+
+seasonal_error <- MAPE(seasonal_pred$pred, seasonal_pred$Consumption)
+
+print(seasonal_error)
+```
+
+
+#### Hourly Consumption of Last Week's Same Day with Lasso Regression
+
+```{r part-d}
+#train_wide <- train168 %>% pivot_wider(id_cols=c("Hour", "lag_168"), )
+
+```
+
+#### BONUS: Fused Lasso Regression
+
+```{r part-e}
+
+
+```
+
+
+#### Comparing the Results
+
+```{r part-f}
+
+
+```
+
+### Reference
+
+[1] Dataset: Electricity Consumption data from 1st of January, 2016 till the 1st of December, 2020 from [Energy Exchange Istanbul(EXIST) Webpage](https://seffaflik.epias.com.tr/transparency/tuketim/gerceklesen-tuketim/gercek-zamanli-tuketim.xhtml).
+

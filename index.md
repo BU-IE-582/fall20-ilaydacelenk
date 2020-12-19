@@ -14,3 +14,6 @@ There will be several homework assignments done for this course.
 
 ### Homework Assignment 2
 [Dimensionality Reduction for Time Series Data](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_2.html):  PCA on uWaveGestureLibrary data.
+
+### Homework Assignment 3
+[Regression on a Time Series Data](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_3.html): Implementation and comparison of different regression approaches on hourly energy consumption data.
