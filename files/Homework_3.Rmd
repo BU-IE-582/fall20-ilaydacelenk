@@ -22,6 +22,7 @@ library(ggplot2)
 library(tidyverse)
 library(glmnet)
 library(CVXR)
+library(lubridate)
 
 ```
 
@@ -128,6 +129,8 @@ train_wide <- train168 %>% rename (Lag_day7=lag_168, Lag_day2=lag_48) %>% pivot_
 ```
 
 We have transformed the data into the wide format from the long format. We see that the features have strong autocorrelation, therefore we will use a penalized regression approach for modeling as suggested. 
+
+Here we can see the summary of the model for the 23rd hour as an example.
 ```{r part-d2}
 #I will be removing Date column, so just in case store them in vectors
 train_date <- as.Date(train_wide$Date,format="%d.%m.%y")
@@ -203,6 +206,8 @@ pred_hour23 <- pred_hour %>% filter(Hour==23) %>% mutate(pred=predict(model23, n
 lasso_pred <- rbind(pred_hour0, pred_hour1, pred_hour2, pred_hour3, pred_hour4, pred_hour5, pred_hour6, pred_hour7, pred_hour8, pred_hour9, pred_hour10, pred_hour11, pred_hour12, pred_hour13, pred_hour14, pred_hour15, pred_hour16, pred_hour17, pred_hour18, pred_hour19, pred_hour20, pred_hour21, pred_hour22, pred_hour23)
 
 lasso_error <- MAPE(lasso_pred$pred, lasso_pred$Consumption)
+
+summary(model23)
 
 ```
 

@@ -377,7 +377,8 @@ library(reshape2)
 library(ggplot2)
 library(tidyverse)
 library(glmnet)
-library(CVXR)</code></pre>
+library(CVXR)
+library(lubridate)</code></pre>
 <div id="introduction" class="section level3">
 <h3>Introduction:</h3>
 <p>This assignment will focus on regression approaches to forecast the next day’s hourly electricity consumption. The approaches will be compared according to mean absolute percentage error(MAPE) values. We will learn the model using the train data and compare the model results using test data.</p>
@@ -479,6 +480,7 @@ seasonal_error &lt;- MAPE(seasonal_pred$pred, seasonal_pred$Consumption)</code><
 
 train_wide &lt;- train168 %&gt;% rename (Lag_day7=lag_168, Lag_day2=lag_48) %&gt;% pivot_wider(names_from=Hour, values_from=c(Lag_day7,Lag_day2, Consumption), names_prefix=c(&quot;hour_&quot;, &quot;hour_&quot;)) %&gt;% unnest()</code></pre>
 <p>We have transformed the data into the wide format from the long format. We see that the features have strong autocorrelation, therefore we will use a penalized regression approach for modeling as suggested.</p>
+<p>Here we can see the summary of the model for the 23rd hour as an example.</p>
 <pre class="r"><code>#I will be removing Date column, so just in case store them in vectors
 train_date &lt;- as.Date(train_wide$Date,format=&quot;%d.%m.%y&quot;)
 test_date &lt;- as.Date(test_wide$Date,format=&quot;%d.%m.%y&quot;)
@@ -552,7 +554,21 @@ pred_hour23 &lt;- pred_hour %&gt;% filter(Hour==23) %&gt;% mutate(pred=predict(m
 
 lasso_pred &lt;- rbind(pred_hour0, pred_hour1, pred_hour2, pred_hour3, pred_hour4, pred_hour5, pred_hour6, pred_hour7, pred_hour8, pred_hour9, pred_hour10, pred_hour11, pred_hour12, pred_hour13, pred_hour14, pred_hour15, pred_hour16, pred_hour17, pred_hour18, pred_hour19, pred_hour20, pred_hour21, pred_hour22, pred_hour23)
 
-lasso_error &lt;- MAPE(lasso_pred$pred, lasso_pred$Consumption)</code></pre>
+lasso_error &lt;- MAPE(lasso_pred$pred, lasso_pred$Consumption)
+
+summary(model23)</code></pre>
+<pre><code>FALSE            Length Class  Mode     
+FALSE lambda     100    -none- numeric  
+FALSE cvm        100    -none- numeric  
+FALSE cvsd       100    -none- numeric  
+FALSE cvup       100    -none- numeric  
+FALSE cvlo       100    -none- numeric  
+FALSE nzero      100    -none- numeric  
+FALSE call         6    -none- call     
+FALSE name         1    -none- character
+FALSE glmnet.fit  12    elnet  list     
+FALSE lambda.min   1    -none- numeric  
+FALSE lambda.1se   1    -none- numeric</code></pre>
 <p>Using penalized lasso approach, we got 2.43% as the MAPE value and this is the best so far.</p>
 </div>
 <div id="bonus-fused-lasso-regression" class="section level4">
