@@ -575,10 +575,13 @@ FALSE lambda.1se   1    -none- numeric</code></pre>
 <h4>BONUS: Fused Lasso Regression</h4>
 <p>In order to apply Penalized Regression with fused penalties, we need to write a customized loss function to minimize. It will have 3 components namely sum of squared errors, ridge penalty over the coefficients and fused lasso penalties. We will use hourly consumption from the wide format as <code>y</code> and after adding a column of 1’s for the intercept we will use train_matrix_features as X. Loss function will be <code>sum_squares(y-X*b) + lambda_2 * sum_squares(b) + lambda_1 * sum(diff(b, lag=1, differences=1))</code> where <code>y</code> is hourly consumption from the wide format and <code>X</code> is the feature columns from the train matrix with an additional column of 1’s as the intercept.</p>
 <pre class="r"><code>y &lt;- train_wide$Consumption_hour_0
-X &lt;- cbind(1,train_matrix_features)</code></pre>
+X &lt;- cbind(1,train_matrix_features)
+
+lambda=min(model0$lambda.min, model1$lambda.min, model2$lambda.min, model3$lambda.min, model4$lambda.min, model5$lambda.min,model6$lambda.min, model7$lambda.min, model8$lambda.min, model9$lambda.min, model10$lambda.min, model11$lambda.min,model12$lambda.min, model13$lambda.min, model14$lambda.min, model15$lambda.min, model6$lambda.min, model7$lambda.min,model18$lambda.min, model19$lambda.min, model20$lambda.min, model21$lambda.min, model22$lambda.min, model23$lambda.min)</code></pre>
 </div>
 <div id="comparing-the-results" class="section level4">
 <h4>Comparing the Results</h4>
+<p>According to the models we have created, the best one is lasso regression since it has the smallest MAPE value.</p>
 <pre class="r"><code>#ape=absolute percentage error without taking the mean
 all_pred &lt;- lasso_pred %&gt;% rename(lasso_pred=pred) %&gt;% full_join(.,test,by=c(&quot;Date&quot;, &quot;Hour&quot;, &quot;Consumption&quot;)) %&gt;% mutate(linear_pred=predict(linear_model, newdata = .)) %&gt;% full_join(.,seasonal_pred,by=c(&quot;Date&quot;, &quot;Hour&quot;, &quot;Consumption&quot;, &quot;lag_48&quot;, &quot;lag_168&quot;)) %&gt;% rename(seasonal_pred=pred) %&gt;% mutate(ape_lasso = (abs(Consumption-lasso_pred)/Consumption), ape_48 = (abs(Consumption-lag_48)/Consumption), ape_168 = (abs(Consumption-lag_168)/Consumption), ape_linear = (abs(Consumption-linear_pred)/Consumption), ape_seasonal = (abs(Consumption-seasonal_pred)/Consumption))
 

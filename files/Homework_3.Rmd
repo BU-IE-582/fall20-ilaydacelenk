@@ -223,10 +223,14 @@ In order to apply Penalized Regression with fused penalties, we need to write a 
 y <- train_wide$Consumption_hour_0
 X <- cbind(1,train_matrix_features)
 
+lambda=min(model0$lambda.min, model1$lambda.min, model2$lambda.min, model3$lambda.min, model4$lambda.min, model5$lambda.min,model6$lambda.min, model7$lambda.min, model8$lambda.min, model9$lambda.min, model10$lambda.min, model11$lambda.min,model12$lambda.min, model13$lambda.min, model14$lambda.min, model15$lambda.min, model6$lambda.min, model7$lambda.min,model18$lambda.min, model19$lambda.min, model20$lambda.min, model21$lambda.min, model22$lambda.min, model23$lambda.min)
+
+
 ```
 
 
 #### Comparing the Results
+According to the models we have created, the best one is lasso regression since it has the smallest MAPE value. 
 
 ```{r part-f}
 #ape=absolute percentage error without taking the mean
