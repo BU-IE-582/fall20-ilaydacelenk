@@ -11,19 +11,19 @@ There will be several homework assignments done for this course.
 * [R Examples](files/HW_0.html): Summary of 5 interesting R examples using RMarkdown.
 
 ### Homework Assignment 1
-* [Description of Homework 0](files/IE582_Fall20_Homework_1.pdf)
+* [Description of Homework 1](files/IE582_Fall20_Homework_1.pdf)
 * [English Premier League Data Analysis](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_1.html): Distributional analysis of English Premier League data.
 
 ### Homework Assignment 2
-* [Description of Homework 0](files/IE582_Fall20_Homework_2.pdf)
+* [Description of Homework 2](files/IE582_Fall20_Homework_2.pdf)
 * [Dimensionality Reduction for Time Series Data](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_2.html):  PCA on uWaveGestureLibrary data.
 
 ### Homework Assignment 3
-* [Description of Homework 0](files/IE582_Fall20_Homework_3.pdf)
+* [Description of Homework 3](files/IE582_Fall20_Homework_3.pdf)
 * [Regression on a Time Series Data](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_3.html): Implementation and comparison of different regression approaches on hourly energy consumption data.
 
 ### Homework Assignment 4
-* [Description of Homework 0](files/IE582_Fall20_Homework_4.pdf)
+* [Description of Homework 4](files/IE582_Fall20_Homework_4.pdf)
 * [Comparison of Models](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_4.html): Implementation and comparison of different classification and regression models on different datasets.
 
 
