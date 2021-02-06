@@ -26,5 +26,9 @@ There will be several homework assignments done for this course.
 * [Description of Homework 4](files/IE582_Fall20_Homework_4.pdf)
 * [Comparison of Models](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_4.html): Implementation and comparison of different classification and regression models on different datasets.
 
+### Final
+* [Description of the Final](files/IE582_Fall20_FinalExam.pdf)
+* [Multiple Instance Learning](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/IE582-Final-ilayda_celenk.html): Classification of bags of instances on the musk data.
+* [Codes](https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/IE582-Final-ilayda_celenk.Rmd)
 
 
