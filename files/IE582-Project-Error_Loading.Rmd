@@ -278,7 +278,7 @@ Possible extensions to have a better approach:
 
 
 # Code
-The Github link for the codes is (HERE)[].
+The Github link for the codes is (HERE)[https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/IE582-Project-Error_Loading.Rmd].
 
 # Submission Codes
 

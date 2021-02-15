@@ -34,6 +34,5 @@ There will be several homework assignments done for this course.
 ### Group Project
 * [Description of the Project](files/IE582_Fall20_Project.pdf)
 * [Report](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/IE582-Project-Error_Loading.html): Imbalanced Classification Problem
-* [Presentation]()
 * [Codes](https://github.com/BU-IE-582/fall20-ilaydacelenk/blob/master/files/IE582-Project-Error_Loading.Rmd)
 
