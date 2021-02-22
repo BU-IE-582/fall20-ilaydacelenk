@@ -27,8 +27,8 @@ There will be several homework assignments done for this course.
 * [Comparison of Models](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_4.html): Implementation and comparison of different classification and regression models on different datasets.
 
 ### Homework Assignment 5
-* [Description of Homework 4](files/IE582_Fall20_Homework_5.pdf)
-* [Comparison of Models](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_5.html): K-Nearest Neighbor and Logistic Regression with fused lasso penalties for classification problems
+* [Description of Homework 5](files/IE582_Fall20_Homework_5.pdf)
+* [Nearest Neighbor and Logistic Regression Approach to Classification Problems](https://bu-ie-582.github.io/fall20-ilaydacelenk/files/Homework_5.html): K-Nearest Neighbor and Logistic Regression with fused lasso penalties for classification problems.
 
 ### Final
 * [Description of the Final](files/IE582_Fall20_FinalExam.pdf)
